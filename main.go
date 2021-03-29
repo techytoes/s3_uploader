@@ -6,7 +6,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 
 	"encoding/json"
-	"fmt"
 	"github.com/aws/aws-sdk-go/service/s3"
 
 	"github.com/gorilla/mux"
@@ -14,9 +13,10 @@ import (
 	"net/http"
 )
 
+// Replace this config
 const (
-	S3_REGION = "ap-south-1"
-	S3_BUCKET = "oh-uploads"
+	S3_REGION = ""
+	S3_BUCKET = ""
 )
 
 // Size constants
@@ -91,10 +91,6 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func homeLink(w http.ResponseWriter, r *http.Request) {
-	_, _ = fmt.Fprintf(w, "Welcome home!")
-}
-
 func Home(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{
 		"status":  "OK",
@@ -104,8 +100,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", homeLink)
-	router.HandleFunc("/home", Home).Methods("GET")
+	router.HandleFunc("/", Home).Methods("GET")
 	router.HandleFunc("/file", UploadFile).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
